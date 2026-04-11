@@ -95,7 +95,7 @@ export default function Experience() {
     {
       company: "IIT Bombay",
       role: "Cloud DevOps Intern",
-      period: "May 2023 - Oct 2023",
+      period: "May 2021 - Oct 2023",
       location: "Bombay, India",
       description: [
         {
