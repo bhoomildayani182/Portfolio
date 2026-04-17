@@ -112,41 +112,41 @@ export default function Experience() {
         }
       ],
       icon: "/assets/img/companies/iit.png"
-    },
-    {
-      company: "SmartInternz",
-      role: "Java Spring Boot & Modern Application Development",
-      period: "Nov 2022 - Jan 2023",
-      location: "Remote",
-      description: [
-        {
-          title: "Modern Applications",
-          content: "Prepared for a starting position in the modern applications domain through virtual training."
-        },
-        {
-          title: "Cloud & Containers",
-          content: "Learned the fundamentals of Kubernetes, containers, and application management principles."
-        }
-      ],
-      icon: "/assets/img/companies/smartinternz.png"
-    },
-    {
-      company: "WeeTech Solution PVT.LTD.",
-      role: "Web Development (backend on Node.js)",
-      period: "June 2022 - July 2022",
-      location: "Surat, India",
-      description: [
-        {
-          title: "Activity Logger",
-          content: "Created an activity logger using Node.js, Express.js, and MongoDB that tracks client website interactions and displays analytics."
-        },
-        {
-          title: "Backend Development",
-          content: "Implemented RESTful APIs and database integration for real-time analytics tracking."
-        }
-      ],
-      icon: "/assets/img/companies/weetech.png"
     }
+    // {
+    //   company: "SmartInternz",
+    //   role: "Java Spring Boot & Modern Application Development",
+    //   period: "Nov 2022 - Jan 2023",
+    //   location: "Remote",
+    //   description: [
+    //     {
+    //       title: "Modern Applications",
+    //       content: "Prepared for a starting position in the modern applications domain through virtual training."
+    //     },
+    //     {
+    //       title: "Cloud & Containers",
+    //       content: "Learned the fundamentals of Kubernetes, containers, and application management principles."
+    //     }
+    //   ],
+    //   icon: "/assets/img/companies/smartinternz.png"
+    // },
+    // {
+    //   company: "WeeTech Solution PVT.LTD.",
+    //   role: "Web Development (backend on Node.js)",
+    //   period: "June 2022 - July 2022",
+    //   location: "Surat, India",
+    //   description: [
+    //     {
+    //       title: "Activity Logger",
+    //       content: "Created an activity logger using Node.js, Express.js, and MongoDB that tracks client website interactions and displays analytics."
+    //     },
+    //     {
+    //       title: "Backend Development",
+    //       content: "Implemented RESTful APIs and database integration for real-time analytics tracking."
+    //     }
+    //   ],
+    //   icon: "/assets/img/companies/weetech.png"
+    // }
   ];
 
   return (
