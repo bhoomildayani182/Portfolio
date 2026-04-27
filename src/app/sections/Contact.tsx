@@ -1,7 +1,21 @@
 'use client';
 
-import { useState, useEffect, FormEvent } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
+
+const contactMethods = [
+  { label: 'Email', value: 'hello@bhoomild.com', href: 'mailto:hello@bhoomild.com' },
+  { label: 'Phone', value: '+91 9033706595', href: 'tel:+919033706595' },
+  { label: 'Location', value: 'Ahmedabad, Gujarat, India' },
+  { label: 'Resume', value: 'Download CV', href: 'https://github.com/user-attachments/files/25255455/Bhoomil-Dayani-Resume.pdf' },
+];
+
+const socialLinks = [
+  { label: 'GitHub', href: 'https://github.com/bhoomildayani182' },
+  { label: 'LinkedIn', href: 'https://linkedin.com/in/bhoomildayani' },
+  { label: 'Twitter', href: 'https://x.com/Bhoomil_Dayani' },
+  { label: 'Upwork', href: 'https://www.upwork.com/freelancers/~014ee5b1482f2068e5?mp_source=share' },
+];
 
 export default function Contact() {
   const [isVisible, setIsVisible] = useState(false);
@@ -9,96 +23,66 @@ export default function Contact() {
     name: '',
     email: '',
     subject: '',
-    message: ''
+    message: '',
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<null | 'success' | 'error'>(null);
 
   useEffect(() => {
     const handleScroll = () => {
-      // Check if element is in viewport
       const element = document.getElementById('contact');
-      if (element) {
-        const rect = element.getBoundingClientRect();
-        const isInViewport = rect.top <= window.innerHeight * 0.75;
-        setIsVisible(isInViewport);
-      }
+      if (!element) return;
+      const rect = element.getBoundingClientRect();
+      setIsVisible(rect.top <= window.innerHeight * 0.78);
     };
 
-    window.addEventListener('scroll', handleScroll);
-    // Initial check
+    window.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll();
-
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Reset status after 5 seconds
   useEffect(() => {
-    if (submitStatus) {
-      const timer = setTimeout(() => {
-        setSubmitStatus(null);
-      }, 5000);
-
-      return () => clearTimeout(timer);
-    }
+    if (!submitStatus) return;
+    const timer = setTimeout(() => setSubmitStatus(null), 5000);
+    return () => clearTimeout(timer);
   }, [submitStatus]);
 
   const containerVariants = {
     hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        duration: 0.8,
-        staggerChildren: 0.15
-      }
-    }
+    visible: { opacity: 1, transition: { duration: 0.65, staggerChildren: 0.1 } },
   };
 
   const itemVariants = {
     hidden: { y: 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: { duration: 0.5 }
-    }
+    visible: { y: 0, opacity: 1, transition: { duration: 0.5 } },
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = event.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (event: FormEvent) => {
+    event.preventDefault();
     setIsSubmitting(true);
 
     try {
-      // Create FormData object
       const formDataObj = new FormData();
       formDataObj.append('name', formData.name);
       formDataObj.append('email', formData.email);
       formDataObj.append('subject', formData.subject);
       formDataObj.append('message', formData.message);
-
-      // Add FormSubmit configuration
       formDataObj.append('_subject', 'New contact from Portfolio Website');
       formDataObj.append('_template', 'table');
 
-      // Send form data without redirecting
       const response = await fetch('https://formsubmit.co/ajax/hello@bhoomild.com', {
         method: 'POST',
-        body: formDataObj
+        body: formDataObj,
       });
 
       if (response.ok) {
         setSubmitStatus('success');
-        // Reset form after successful submission
-        setFormData({
-          name: '',
-          email: '',
-          subject: '',
-          message: ''
-        });
+        setFormData({ name: '', email: '', subject: '', message: '' });
       } else {
         setSubmitStatus('error');
       }
@@ -110,266 +94,155 @@ export default function Contact() {
     }
   };
 
+  const fieldClass = 'w-full rounded-lg border border-line bg-panel-bg px-4 py-3 text-foreground outline-none ring-primary/30 transition focus:border-primary/45 focus:ring-2';
+
   return (
-    <section className="relative min-h-screen pt-24 py-16 px-6 md:px-12 bg-gradient-to-br from-background to-gray-light/30" id="contact">
-      {/* Background decorative elements */}
-      <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0 pointer-events-none">
-        <div className="absolute top-60 right-10 md:right-40 w-64 h-64 bg-primary/10 rounded-full filter blur-3xl"></div>
-        <div className="absolute bottom-60 right-10 md:right-40 w-72 h-72 bg-secondary/10 rounded-full filter blur-3xl"></div>
-        <div className="absolute top-1/3 right-1/3 w-96 h-96 bg-accent/5 rounded-full filter blur-3xl"></div>
-
-        {/* Decorative shapes */}
-        <div className="absolute top-1/3 right-20 w-12 h-12 bg-accent/10 rotate-45"></div>
-        <div className="absolute bottom-1/4 right-40 w-8 h-8 bg-primary/10 rounded-full"></div>
-      </div>
-
-      {/* Content */}
+    <section className="relative overflow-hidden px-5 py-24 md:px-8 lg:px-10" id="contact">
       <motion.div
-        className="relative z-10 max-w-7xl mx-auto"
+        className="mx-auto max-w-7xl"
         variants={containerVariants}
         initial="hidden"
-        animate={isVisible ? "visible" : "hidden"}
+        animate={isVisible ? 'visible' : 'hidden'}
       >
-        {/* Header */}
-        <motion.div variants={itemVariants} className="mb-16 text-center">
-          <h2 className="inline-block py-1 px-3 mb-3 text-sm font-medium rounded-full bg-primary/10 text-primary">Get In Touch</h2>
-          <h1 className="text-5xl md:text-6xl font-bold mb-6">
-            Contact <span className="gradient-text">Me</span>
+        <motion.div variants={itemVariants} className="mb-12 max-w-3xl">
+          <span className="section-kicker">Get In Touch</span>
+          <h1 className="section-heading">
+            Let&apos;s build reliable <span className="gradient-text">cloud systems</span>
           </h1>
-          <p className="text-lg text-gray-dark max-w-3xl mx-auto">
-            Have a question or want to work together? Feel free to reach out to me using any of the methods below.
+          <p className="section-copy mt-5">
+            Have a question or want to work together? Reach out for Cloud, DevOps, CI/CD, infrastructure automation, or platform engineering work.
           </p>
         </motion.div>
 
-        {/* Contact Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-          {/* Contact Form */}
-          <motion.div variants={itemVariants} className="order-2 lg:order-1">
-            <div className="bg-card-bg rounded-xl shadow-lg p-8 border border-white/10">
-              <h3 className="text-2xl font-bold mb-6">Send me a message</h3>
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-[0.95fr_1.05fr]">
+          <motion.aside variants={itemVariants} className="surface-card p-5 md:p-8">
+            <h3 className="text-2xl font-black text-foreground">Contact Information</h3>
+            <p className="mt-3 leading-7 text-gray-medium">
+              I am available for new projects, infrastructure reviews, DevOps automation, and Cloud engineering collaboration.
+            </p>
 
-              {submitStatus === 'success' && (
-                <div className="mb-6 p-4 bg-green-100 text-green-800 rounded-lg flex items-center gap-2">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  Message sent successfully! I'll get back to you soon.
+            <div className="mt-8 grid gap-3">
+              {contactMethods.map((method) => (
+                <div key={method.label} className="rounded-lg border border-line bg-panel-bg p-4">
+                  <p className="text-xs font-bold uppercase tracking-[0.16em] text-gray-medium">{method.label}</p>
+                  {method.href ? (
+                    <a
+                      href={method.href}
+                      target={method.href.startsWith('http') ? '_blank' : undefined}
+                      rel={method.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+                      className="mt-2 block break-words text-base font-bold text-foreground transition-colors hover:text-primary-dark"
+                    >
+                      {method.value}
+                    </a>
+                  ) : (
+                    <p className="mt-2 text-base font-bold text-foreground">{method.value}</p>
+                  )}
                 </div>
-              )}
+              ))}
+            </div>
 
-              {submitStatus === 'error' && (
-                <div className="mb-6 p-4 bg-red-100 text-red-800 rounded-lg flex items-center gap-2">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
-                  </svg>
-                  There was an error sending your message. Please try emailing me directly at hello@bhoomild.com.
-                </div>
-              )}
+            <div className="mt-8 border-t border-line pt-6">
+              <p className="text-sm font-bold uppercase tracking-[0.16em] text-gray-medium">Connect</p>
+              <div className="mt-4 flex flex-wrap gap-2">
+                {socialLinks.map((social) => (
+                  <a
+                    key={social.label}
+                    href={social.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="rounded-md border border-line bg-white px-3 py-2 text-sm font-bold text-gray-dark transition-colors hover:border-primary/40 hover:text-primary-dark"
+                  >
+                    {social.label}
+                  </a>
+                ))}
+              </div>
+            </div>
+          </motion.aside>
 
-              <form onSubmit={handleSubmit}>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                  <div>
-                    <label htmlFor="name" className="block text-sm font-medium text-gray-dark mb-2">Your Name</label>
-                    <input
-                      type="text"
-                      id="name"
-                      name="name"
-                      required
-                      value={formData.name}
-                      onChange={handleChange}
-                      className="w-full px-4 py-2.5 rounded-lg border border-gray-light/50 bg-background/50 text-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                      placeholder="John Doe"
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-gray-dark mb-2">Your Email</label>
-                    <input
-                      type="email"
-                      id="email"
-                      name="email"
-                      required
-                      value={formData.email}
-                      onChange={handleChange}
-                      className="w-full px-4 py-2.5 rounded-lg border border-gray-light/50 bg-background/50 text-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                      placeholder="john@example.com"
-                    />
-                  </div>
-                </div>
+          <motion.div variants={itemVariants} className="surface-card p-5 md:p-8">
+            <h3 className="text-2xl font-black text-foreground">Send me a message</h3>
 
-                <div className="mb-6">
-                  <label htmlFor="subject" className="block text-sm font-medium text-gray-dark mb-2">Subject</label>
+            {submitStatus === 'success' && (
+              <div className="mt-5 rounded-lg border border-secondary/30 bg-secondary/10 p-4 text-sm font-bold text-secondary-dark">
+                Message sent successfully. I&apos;ll get back to you soon.
+              </div>
+            )}
+
+            {submitStatus === 'error' && (
+              <div className="mt-5 rounded-lg border border-red-300/30 bg-red-300/10 p-4 text-sm font-bold text-red-700">
+                There was an error sending your message. Please try emailing me directly at hello@bhoomild.com.
+              </div>
+            )}
+
+            <form onSubmit={handleSubmit} className="mt-6">
+              <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+                <div>
+                  <label htmlFor="name" className="mb-2 block text-sm font-bold text-gray-dark">Your Name</label>
                   <input
                     type="text"
-                    id="subject"
-                    name="subject"
+                    id="name"
+                    name="name"
                     required
-                    value={formData.subject}
+                    value={formData.name}
                     onChange={handleChange}
-                    className="w-full px-4 py-2.5 rounded-lg border border-gray-light/50 bg-background/50 text-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                    placeholder="Project Inquiry"
+                    className={fieldClass}
+                    placeholder="John Doe"
                   />
                 </div>
-
-                <div className="mb-6">
-                  <label htmlFor="message" className="block text-sm font-medium text-gray-dark mb-2">Message</label>
-                  <textarea
-                    id="message"
-                    name="message"
-                    rows={5}
+                <div>
+                  <label htmlFor="email" className="mb-2 block text-sm font-bold text-gray-dark">Your Email</label>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
                     required
-                    value={formData.message}
+                    value={formData.email}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 rounded-lg border border-gray-light/50 bg-background/50 text-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent resize-none"
-                    placeholder="Hello Bhoomil, I'd like to discuss a potential project..."
-                  ></textarea>
-                </div>
-
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className={`w-full px-6 py-3 bg-gradient-to-r from-primary to-primary-dark text-white rounded-lg border-2 border-primary/50 flex justify-center items-center gap-2 transition-all duration-300 ${isSubmitting ? 'opacity-70 cursor-not-allowed' : 'hover:shadow-lg hover:border-primary'}`}
-                >
-                  {isSubmitting ? (
-                    <>
-                      <svg className="animate-spin -ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                      </svg>
-                      Sending message...
-                    </>
-                  ) : (
-                    <>
-                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
-                      </svg>
-                      Send Message
-                    </>
-                  )}
-                </button>
-              </form>
-            </div>
-          </motion.div>
-
-          {/* Contact Information */}
-          <motion.div variants={itemVariants} className="order-1 lg:order-2">
-            <div className="bg-card-bg rounded-xl shadow-lg p-8 border border-white/10 h-full flex flex-col">
-              <h3 className="text-2xl font-bold mb-6">Contact Information</h3>
-
-              <div className="space-y-6 flex-grow">
-                <div className="flex items-start gap-4">
-                  <div className="bg-primary/10 p-3 rounded-full text-primary">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
-                    </svg>
-                  </div>
-                  <div>
-                    <h4 className="text-lg font-semibold mb-1">Email</h4>
-                    <a href="mailto:hello@bhoomild.com" className="text-gray-dark hover:text-primary transition-colors duration-300">hello@bhoomild.com</a>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-4">
-                  <div className="bg-primary/10 p-3 rounded-full text-primary">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <h4 className="text-lg font-semibold mb-1">Phone</h4>
-                    <a href="tel:+919033706595" className="text-gray-dark hover:text-primary transition-colors duration-300">+91 9033706595</a>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-4">
-                  <div className="bg-primary/10 p-3 rounded-full text-primary">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <h4 className="text-lg font-semibold mb-1">Location</h4>
-                    <p className="text-gray-dark">Ahmedabad, Gujarat, India</p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-4">
-                  <div className="bg-primary/10 p-3 rounded-full text-primary">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M11.35 3.836c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75a2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m8.9-4.414c.376.023.75.05 1.124.08 1.131.094 1.976 1.057 1.976 2.192V16.5A2.25 2.25 0 0118 18.75h-2.25m-7.5-10.5H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V18.75m-7.5-10.5h6.375c.621 0 1.125.504 1.125 1.125v9.375m-8.25-3l1.5 1.5 3-3.75" />
-                    </svg>
-                  </div>
-                  <div>
-                    <h4 className="text-lg font-semibold mb-1">Resume</h4>
-                    <a
-                      href="https://github.com/user-attachments/files/25255455/Bhoomil-Dayani-Resume.pdf"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-primary hover:text-primary-dark transition-colors duration-300 flex items-center gap-1"
-                    >
-                      Download CV
-                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
-                      </svg>
-                    </a>
-                  </div>
+                    className={fieldClass}
+                    placeholder="john@example.com"
+                  />
                 </div>
               </div>
 
-              {/* Connect with me section */}
-              <div className="mt-10">
-                <h4 className="text-lg font-semibold mb-4">Connect with me</h4>
-                <div className="flex space-x-4">
-                  <a
-                    href="https://github.com/bhoomildayani182"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="bg-card-bg text-gray-dark hover:text-primary transition-colors duration-300 p-3 rounded-full border border-gray-light/30 hover:border-primary/50"
-                    aria-label="GitHub"
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
-                    </svg>
-                  </a>
-                  <a
-                    href="https://www.linkedin.com/in/bhoomil-dayani-b286b1201/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="bg-card-bg text-gray-dark hover:text-primary transition-colors duration-300 p-3 rounded-full border border-gray-light/30 hover:border-primary/50"
-                    aria-label="LinkedIn"
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M4.98 3.5c0 1.381-1.11 2.5-2.48 2.5s-2.48-1.119-2.48-2.5c0-1.38 1.11-2.5 2.48-2.5s2.48 1.12 2.48 2.5zm.02 4.5h-5v16h5v-16zm7.982 0h-4.968v16h4.969v-8.399c0-4.67 6.029-5.052 6.029 0v8.399h4.988v-10.131c0-7.88-8.922-7.593-11.018-3.714v-2.155z" />
-                    </svg>
-                  </a>
-                  <a
-                    href="https://twitter.com/BhoomilDayani"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="bg-card-bg text-gray-dark hover:text-primary transition-colors duration-300 p-3 rounded-full border border-gray-light/30 hover:border-primary/50"
-                    aria-label="Twitter"
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z" />
-                    </svg>
-                  </a>
-                  <a
-                    href="https://www.upwork.com/freelancers/~014ee5b1482f2068e5?mp_source=share"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="bg-card-bg text-gray-dark hover:text-primary transition-colors duration-300 p-3 rounded-full border border-gray-light/30 hover:border-primary/50"
-                    aria-label="Upwork"
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M18.561 13.158c-1.102 0-2.135-.467-3.074-1.227l.228-1.076.008-.042c.207-1.143.849-3.06 2.839-3.06 1.492 0 2.703 1.212 2.703 2.703-.001 1.489-1.212 2.702-2.704 2.702zm0-8.14c-2.539 0-4.51 1.649-5.31 4.366-1.22-1.834-2.148-4.036-2.687-5.892H7.828v7.112c-.002 1.406-1.141 2.546-2.547 2.546-1.405 0-2.543-1.14-2.543-2.546V3.492H0v7.112c0 2.914 2.37 5.303 5.281 5.303 2.913 0 5.283-2.389 5.283-5.303v-1.19c.529 1.107 1.182 2.229 1.974 3.221l-1.673 7.873h2.797l1.213-5.71c1.063.679 2.285 1.109 3.686 1.109 3 0 5.439-2.452 5.439-5.45 0-3-2.439-5.439-5.439-5.439z" />
-                    </svg>
-                  </a>
-                </div>
+              <div className="mt-5">
+                <label htmlFor="subject" className="mb-2 block text-sm font-bold text-gray-dark">Subject</label>
+                <input
+                  type="text"
+                  id="subject"
+                  name="subject"
+                  required
+                  value={formData.subject}
+                  onChange={handleChange}
+                  className={fieldClass}
+                  placeholder="Project Inquiry"
+                />
               </div>
-            </div>
+
+              <div className="mt-5">
+                <label htmlFor="message" className="mb-2 block text-sm font-bold text-gray-dark">Message</label>
+                <textarea
+                  id="message"
+                  name="message"
+                  rows={5}
+                  required
+                  value={formData.message}
+                  onChange={handleChange}
+                  className={`${fieldClass} resize-none`}
+                  placeholder="Hello Bhoomil, I would like to discuss a potential project..."
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="mt-6 inline-flex w-full items-center justify-center rounded-md border border-primary/45 bg-primary px-5 py-3 text-sm font-black text-white transition-all hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-65"
+              >
+                {isSubmitting ? 'Sending message...' : 'Send Message'}
+              </button>
+            </form>
           </motion.div>
         </div>
       </motion.div>
     </section>
   );
-} 
+}

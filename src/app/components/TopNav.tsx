@@ -1,159 +1,174 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { AnimatePresence, motion } from 'framer-motion';
 
 const navLinks = [
-    { label: 'About', href: '#about' },
-    { label: 'Experience', href: '#experience' },
-    { label: 'Skills', href: '#skills' },
-    { label: 'Projects', href: '#projects' },
-    { label: 'Contact', href: '#contact' },
-    { label: 'Blog', href: 'https://blog.bhoomild.com', external: true },
+  { label: 'Home', href: '/' },
+  { label: 'About', href: '/about' },
+  { label: 'Experience', href: '/experience' },
+  { label: 'Skills', href: '/skills' },
+  { label: 'Projects', href: '/projects' },
+  { label: 'Certifications', href: '/certifications' },
+  { label: 'Contact', href: '/contact' },
+  { label: 'Blog', href: 'https://blog.bhoomild.com', external: true },
 ];
 
 export default function TopNav() {
-    const [menuOpen, setMenuOpen] = useState(false);
-    const [scrolled, setScrolled] = useState(false);
+  const pathname = usePathname();
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
-    useEffect(() => {
-        const onScroll = () => setScrolled(window.scrollY > 20);
-        window.addEventListener('scroll', onScroll, { passive: true });
-        return () => window.removeEventListener('scroll', onScroll);
-    }, []);
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 12);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
-    useEffect(() => {
-        document.body.style.overflow = menuOpen ? 'hidden' : '';
-        return () => { document.body.style.overflow = ''; };
-    }, [menuOpen]);
-
-    const scrollTo = (id: string) => {
-        setMenuOpen(false);
-        const el = document.getElementById(id);
-        if (el) el.scrollIntoView({ behavior: 'smooth' });
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? 'hidden' : '';
+    return () => {
+      document.body.style.overflow = '';
     };
+  }, [menuOpen]);
 
-    return (
-        <header
-            className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled
-                ? 'bg-[#0a0f1e]/90 backdrop-blur-xl border-b border-white/5 shadow-lg shadow-black/30'
-                : 'bg-transparent'
+  const isActive = (href: string) => {
+    if (href === '/') return pathname === '/';
+    return pathname === href || pathname.startsWith(`${href}/`);
+  };
+
+  return (
+    <header
+      className={`fixed inset-x-0 top-0 z-50 border-b transition-all duration-300 ${
+        scrolled
+          ? 'border-line bg-white/92 shadow-[0_10px_35px_rgba(18,32,54,0.08)] backdrop-blur-xl'
+          : 'border-transparent bg-white/72 backdrop-blur-md'
+      }`}
+      role="banner"
+    >
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-5 md:px-8 lg:px-10">
+        <Link href="/" aria-label="Bhoomil Dayani - Cloud DevOps Engineer" className="flex shrink-0 items-center gap-3">
+          <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary text-sm font-black text-white shadow-[0_12px_28px_rgba(37,99,235,0.22)]">
+            BD
+          </span>
+          <span className="hidden leading-tight sm:block">
+            <span className="block text-sm font-black text-foreground">Bhoomil Dayani</span>
+            <span className="block text-[11px] font-bold uppercase tracking-[0.18em] text-secondary">Cloud DevOps Engineer</span>
+          </span>
+        </Link>
+
+        <nav className="hidden items-center gap-1 lg:flex" aria-label="Main navigation">
+          {navLinks.map((link) =>
+            link.external ? (
+              <a
+                key={link.label}
+                href={link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded-md px-3 py-2 text-sm font-bold text-gray-medium transition-colors hover:bg-primary/10 hover:text-primary-dark"
+              >
+                {link.label}
+              </a>
+            ) : (
+              <Link
+                key={link.label}
+                href={link.href}
+                className={`rounded-md px-3 py-2 text-sm font-bold transition-colors ${
+                  isActive(link.href)
+                    ? 'bg-primary/10 text-primary-dark'
+                    : 'text-gray-medium hover:bg-primary/10 hover:text-primary-dark'
                 }`}
-            role="banner"
+              >
+                {link.label}
+              </Link>
+            )
+          )}
+        </nav>
+
+        <div className="hidden items-center gap-2 lg:flex">
+          <Link
+            href="/contact"
+            className="rounded-md bg-primary px-4 py-2 text-sm font-black text-white shadow-[0_10px_26px_rgba(37,99,235,0.2)] transition-all hover:-translate-y-0.5 hover:bg-primary-dark"
+          >
+            Start a Project
+          </Link>
+        </div>
+
+        <button
+          type="button"
+          onClick={() => setMenuOpen((open) => !open)}
+          aria-label="Toggle navigation menu"
+          aria-expanded={menuOpen}
+          aria-controls="mobile-nav"
+          className="flex h-10 w-10 items-center justify-center rounded-lg border border-line bg-white text-gray-dark transition-colors hover:border-primary/35 hover:text-primary-dark lg:hidden"
         >
-            <div className="max-w-7xl mx-auto px-6 md:px-12 h-16 flex items-center justify-between gap-6">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="h-5 w-5" aria-hidden="true">
+            {menuOpen ? (
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
+            ) : (
+              <path strokeLinecap="round" strokeLinejoin="round" d="M4 7h16M4 12h16M4 17h16" />
+            )}
+          </svg>
+        </button>
+      </div>
 
-                {/* Logo */}
-                <Link
-                    href="/"
-                    aria-label="Bhoomil Dayani — DevOps & Cloud Engineer"
-                    className="shrink-0 text-lg font-bold tracking-tight"
-                    onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-                >
-                    <span className="gradient-text">Bhoomil</span>
-                    <span className="text-white/50"> Dayani</span>
-                </Link>
-
-                {/* Desktop nav */}
-                <nav className="hidden md:flex items-center gap-1" aria-label="Main navigation">
-                    {navLinks.map((link) =>
-                        link.external ? (
-                            <a
-                                key={link.label}
-                                href={link.href}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="px-3.5 py-2 rounded-lg text-sm font-medium text-gray-400 hover:text-white hover:bg-white/5 transition-all duration-200"
-                            >
-                                {link.label}
-                            </a>
-                        ) : (
-                            <button
-                                key={link.label}
-                                type="button"
-                                onClick={() => scrollTo(link.href.slice(1))}
-                                className="px-3.5 py-2 rounded-lg text-sm font-medium text-gray-400 hover:text-white hover:bg-white/5 transition-all duration-200 cursor-pointer"
-                            >
-                                {link.label}
-                            </button>
-                        )
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div
+            id="mobile-nav"
+            key="mobile-nav"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.18 }}
+            className="border-t border-line bg-white/96 px-5 py-4 backdrop-blur-xl lg:hidden"
+          >
+            <nav aria-label="Mobile navigation">
+              <ul className="grid gap-1">
+                {navLinks.map((link) => (
+                  <li key={link.label}>
+                    {link.external ? (
+                      <a
+                        href={link.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={() => setMenuOpen(false)}
+                        className="flex rounded-md px-3 py-3 text-sm font-bold text-gray-dark transition-colors hover:bg-primary/10 hover:text-primary-dark"
+                      >
+                        {link.label}
+                      </a>
+                    ) : (
+                      <Link
+                        href={link.href}
+                        onClick={() => setMenuOpen(false)}
+                        className={`flex rounded-md px-3 py-3 text-sm font-bold transition-colors ${
+                          isActive(link.href)
+                            ? 'bg-primary/10 text-primary-dark'
+                            : 'text-gray-dark hover:bg-primary/10 hover:text-primary-dark'
+                        }`}
+                      >
+                        {link.label}
+                      </Link>
                     )}
-                    <a
-                        href="mailto:hello@bhoomild.com"
-                        className="ml-3 inline-flex items-center gap-2 px-5 py-2 rounded-full bg-primary text-white text-sm font-semibold shadow-lg shadow-primary/25 hover:bg-primary-dark hover:shadow-primary/40 transition-all duration-300"
-                    >
-                        Hire Me
-                    </a>
-                </nav>
-
-                {/* Mobile hamburger */}
-                <button
-                    type="button"
-                    onClick={() => setMenuOpen(!menuOpen)}
-                    aria-label="Toggle navigation menu"
-                    aria-expanded={menuOpen}
-                    aria-controls="mobile-nav"
-                    className="md:hidden flex items-center justify-center w-10 h-10 rounded-lg border border-white/10 text-gray-400 hover:text-white hover:bg-white/5 transition-all duration-200"
-                >
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5" aria-hidden="true">
-                        {menuOpen
-                            ? <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                            : <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />}
-                    </svg>
-                </button>
-            </div>
-
-            {/* Mobile dropdown */}
-            <AnimatePresence>
-                {menuOpen && (
-                    <motion.div
-                        id="mobile-nav"
-                        key="mobile-nav"
-                        initial={{ opacity: 0, y: -8 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -8 }}
-                        transition={{ duration: 0.18 }}
-                        className="md:hidden bg-[#0a0f1e]/98 backdrop-blur-xl border-b border-white/5 px-6 pb-5 pt-2"
-                    >
-                        <nav aria-label="Mobile navigation">
-                            <ul className="flex flex-col gap-1">
-                                {navLinks.map((link) => (
-                                    <li key={link.label}>
-                                        {link.external ? (
-                                            <a
-                                                href={link.href}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                onClick={() => setMenuOpen(false)}
-                                                className="flex px-4 py-3 rounded-xl text-sm font-medium text-gray-300 hover:text-white hover:bg-white/5 transition-all duration-200"
-                                            >
-                                                {link.label}
-                                            </a>
-                                        ) : (
-                                            <button
-                                                type="button"
-                                                onClick={() => scrollTo(link.href.slice(1))}
-                                                className="w-full text-left flex px-4 py-3 rounded-xl text-sm font-medium text-gray-300 hover:text-white hover:bg-white/5 transition-all duration-200"
-                                            >
-                                                {link.label}
-                                            </button>
-                                        )}
-                                    </li>
-                                ))}
-                                <li className="mt-2">
-                                    <a
-                                        href="mailto:hello@bhoomild.com"
-                                        className="flex items-center justify-center px-4 py-3 rounded-xl bg-primary text-white text-sm font-semibold"
-                                    >
-                                        Hire Me
-                                    </a>
-                                </li>
-                            </ul>
-                        </nav>
-                    </motion.div>
-                )}
-            </AnimatePresence>
-        </header>
-    );
+                  </li>
+                ))}
+                <li className="pt-2">
+                  <Link
+                    href="/contact"
+                    onClick={() => setMenuOpen(false)}
+                    className="flex justify-center rounded-md bg-primary px-3 py-3 text-sm font-black text-white"
+                  >
+                    Start a Project
+                  </Link>
+                </li>
+              </ul>
+            </nav>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </header>
+  );
 }

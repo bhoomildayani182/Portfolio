@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useEffect, useRef, useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 
 interface Project {
   title: string;
@@ -78,7 +78,7 @@ const projectsData: Project[] = [
   },
   {
     title: 'Activity Scheduling Timetable Generator',
-    subtitle: 'Heuristic timetable optimization solving the NP-hard constraint satisfaction problem — research published at ICOECA 2023.',
+    subtitle: 'Heuristic timetable optimization solving the NP-hard constraint satisfaction problem - research published at ICOECA 2023.',
     category: 'Research',
     highlights: [
       'Research paper published at ICOECA 2023',
@@ -114,17 +114,16 @@ const projectsData: Project[] = [
 const categories = ['All', 'DevOps & Cloud', 'DevSecOps', 'Research', 'Web Dev'];
 
 const categoryColors: Record<string, string> = {
-  'DevOps & Cloud': 'bg-primary/10 text-primary border-primary/20',
-  'DevSecOps': 'bg-secondary/10 text-secondary border-secondary/20',
-  'Research': 'bg-accent/10 text-accent border-accent/20',
-  'Web Dev': 'bg-[#2496ED]/10 text-[#2496ED] border-[#2496ED]/20',
+  'DevOps & Cloud': 'border-primary/30 bg-primary/10 text-primary-dark',
+  DevSecOps: 'border-secondary/30 bg-secondary/10 text-secondary-dark',
+  Research: 'border-accent/30 bg-accent/10 text-amber-700',
+  'Web Dev': 'border-rose-300/30 bg-rose-300/10 text-rose-700',
 };
 
 function CheckIcon() {
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-      className="w-4 h-4 shrink-0 text-secondary mt-0.5" aria-hidden="true">
-      <path fillRule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clipRule="evenodd" />
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="mt-1 h-4 w-4 shrink-0 text-secondary" aria-hidden="true">
+      <path fillRule="evenodd" d="M16.7 4.15a.75.75 0 0 1 .15 1.05l-8 10.5a.75.75 0 0 1-1.13.08l-4.5-4.5a.75.75 0 1 1 1.06-1.06l3.9 3.89 7.47-9.81a.75.75 0 0 1 1.05-.15Z" clipRule="evenodd" />
     </svg>
   );
 }
@@ -136,138 +135,123 @@ export default function Projects() {
 
   useEffect(() => {
     const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) setIsVisible(true); },
+      ([entry]) => {
+        if (entry.isIntersecting) setIsVisible(true);
+      },
       { threshold: 0.1 }
     );
+
     if (sectionRef.current) observer.observe(sectionRef.current);
     return () => observer.disconnect();
   }, []);
 
-  const filtered = activeFilter === 'All'
-    ? projectsData
-    : projectsData.filter((p) => p.category === activeFilter);
+  const filtered = activeFilter === 'All' ? projectsData : projectsData.filter((project) => project.category === activeFilter);
 
   const containerVariants = {
     hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { staggerChildren: 0.1 } },
+    visible: { opacity: 1, transition: { staggerChildren: 0.08 } },
   };
 
   const cardVariants = {
-    hidden: { opacity: 0, y: 24 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: 'easeOut' } },
+    hidden: { opacity: 0, y: 18 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.45, ease: 'easeOut' } },
   };
 
   return (
     <section
       ref={sectionRef}
       id="projects"
-      className="relative py-24 px-6 md:px-12 bg-background"
-      aria-label="Projects by Bhoomil Dayani — DevOps & Cloud Engineer"
+      className="relative overflow-hidden border-y border-line bg-panel-bg/55 px-5 py-24 md:px-8 lg:px-10"
+      aria-label="Projects by Bhoomil Dayani, DevOps and Cloud Engineer"
     >
-      {/* Background glows */}
-      <div className="pointer-events-none absolute inset-0 z-0" aria-hidden="true">
-        <div className="absolute top-1/4 right-0 w-96 h-96 bg-primary/5 rounded-full blur-[100px]" />
-        <div className="absolute bottom-1/4 left-0 w-80 h-80 bg-secondary/5 rounded-full blur-[100px]" />
-      </div>
+      <div className="cloud-grid pointer-events-none absolute inset-0 opacity-35" aria-hidden="true" />
 
-      <div className="relative z-10 max-w-7xl mx-auto">
-
-        {/* Header */}
+      <div className="relative z-10 mx-auto max-w-7xl">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 18 }}
           animate={isVisible ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
-          className="mb-12"
+          transition={{ duration: 0.55 }}
+          className="mb-10 grid gap-6 lg:grid-cols-[0.78fr_1fr] lg:items-end"
         >
-          <p className="text-sm font-semibold uppercase tracking-widest text-primary mb-3">Portfolio</p>
-          <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-4">
-            Selected <span className="gradient-text">Work</span>
-          </h2>
-          <p className="text-lg text-gray-400 max-w-2xl">
-            A collection of DevOps, cloud infrastructure, and engineering projects — focused on automation, security, and scalability.
+          <div>
+            <span className="section-kicker">Portfolio</span>
+            <h1 className="section-heading">
+              Selected <span className="gradient-text">cloud work</span>
+            </h1>
+          </div>
+          <p className="section-copy lg:max-w-2xl">
+            A collection of DevOps, cloud infrastructure, and engineering projects focused on automation, security, availability, and scale.
           </p>
         </motion.div>
 
-        {/* Filter Pills */}
         <motion.div
-          initial={{ opacity: 0, y: 12 }}
+          initial={{ opacity: 0, y: 10 }}
           animate={isVisible ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5, delay: 0.15 }}
-          className="flex flex-wrap gap-2 mb-10"
+          transition={{ duration: 0.45, delay: 0.1 }}
+          className="mb-8 flex flex-wrap gap-2"
           role="group"
           aria-label="Filter projects by category"
         >
-          {categories.map((cat) => (
+          {categories.map((category) => (
             <button
-              key={cat}
+              key={category}
               type="button"
-              onClick={() => setActiveFilter(cat)}
-              aria-pressed={activeFilter === cat}
-              className={`px-4 py-2 rounded-full text-sm font-medium border transition-all duration-200 ${activeFilter === cat
-                  ? 'bg-primary text-white border-primary shadow-lg shadow-primary/20'
-                  : 'bg-transparent text-gray-400 border-white/10 hover:border-white/30 hover:text-white'
-                }`}
+              onClick={() => setActiveFilter(category)}
+              aria-pressed={activeFilter === category}
+              className={`rounded-md border px-4 py-2 text-sm font-bold transition-all ${
+                activeFilter === category
+                  ? 'border-primary/45 bg-primary text-white shadow-[0_10px_26px_rgba(37,99,235,0.18)]'
+                  : 'border-line bg-white text-gray-dark hover:border-primary/35 hover:text-primary-dark'
+              }`}
             >
-              {cat}
+              {category}
             </button>
           ))}
         </motion.div>
 
-        {/* Projects Grid */}
         <AnimatePresence mode="wait">
           <motion.div
             key={activeFilter}
             variants={containerVariants}
             initial="hidden"
             animate={isVisible ? 'visible' : 'hidden'}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+            className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3"
           >
             {filtered.map((project) => (
               <motion.article
                 key={project.title}
                 variants={cardVariants}
-                className="group flex flex-col bg-[#0d1526] border border-white/8 rounded-2xl p-6 hover:border-white/20 hover:-translate-y-1 transition-all duration-300 hover:shadow-xl hover:shadow-black/30"
+                className={`card flex flex-col p-5 ${project.featured ? 'xl:row-span-1' : ''}`}
                 aria-label={project.title}
               >
-                {/* Top row: category badge + featured */}
-                <div className="flex items-center justify-between mb-4">
-                  <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold border ${categoryColors[project.category] ?? 'bg-white/5 text-gray-400 border-white/10'}`}>
+                <div className="mb-4 flex items-start justify-between gap-3">
+                  <span className={`rounded-md border px-2.5 py-1 text-xs font-black ${categoryColors[project.category] ?? 'border-line bg-white text-gray-dark'}`}>
                     {project.category}
                   </span>
                   {project.featured && (
-                    <span className="inline-flex items-center gap-1 text-xs font-bold text-yellow-400">
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5" aria-hidden="true">
-                        <path fillRule="evenodd" d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.62 3.102-1.106 4.637c-.194.813.691 1.456 1.405 1.02L10 15.591l4.069 2.485c.713.436 1.598-.207 1.404-1.02l-1.106-4.637 3.62-3.102c.635-.544.297-1.584-.536-1.65l-4.752-.382-1.831-4.401z" clipRule="evenodd" />
-                      </svg>
-                      FEATURED
+                    <span className="rounded-md border border-accent/35 bg-accent/10 px-2.5 py-1 text-xs font-black text-amber-700">
+                      Featured
                     </span>
                   )}
                 </div>
 
-                {/* Title */}
-                <h3 className="text-lg font-bold text-white mb-2 leading-snug group-hover:text-primary transition-colors duration-200">
+                <h3 className="text-xl font-black leading-tight text-foreground transition-colors group-hover:text-primary-dark">
                   {project.title}
                 </h3>
+                <p className="mt-3 text-sm leading-6 text-gray-medium">{project.subtitle}</p>
 
-                {/* Subtitle */}
-                <p className="text-sm text-gray-400 leading-relaxed mb-5">
-                  {project.subtitle}
-                </p>
-
-                {/* Key highlights */}
-                <ul className="space-y-2 mb-6 flex-1" aria-label={`Key highlights for ${project.title}`}>
-                  {project.highlights.map((h, idx) => (
-                    <li key={idx} className="flex items-start gap-2 text-sm text-gray-300">
+                <ul className="mt-5 flex-1 space-y-3" aria-label={`Key highlights for ${project.title}`}>
+                  {project.highlights.map((highlight) => (
+                    <li key={highlight} className="flex items-start gap-2 text-sm leading-6 text-gray-dark">
                       <CheckIcon />
-                      <span>{h}</span>
+                      <span>{highlight}</span>
                     </li>
                   ))}
                 </ul>
 
-                {/* Tech stack badges */}
-                <div className="flex flex-wrap gap-1.5 pt-4 border-t border-white/5">
+                <div className="mt-6 flex flex-wrap gap-2 border-t border-line pt-4">
                   {project.tags.map((tag) => (
-                    <span key={tag} className="px-2 py-0.5 rounded-md text-xs font-medium bg-white/5 text-gray-400 border border-white/8">
+                    <span key={tag} className="rounded-md border border-line bg-white px-2 py-1 text-xs font-bold text-gray-medium">
                       {tag}
                     </span>
                   ))}
@@ -276,7 +260,6 @@ export default function Projects() {
             ))}
           </motion.div>
         </AnimatePresence>
-
       </div>
     </section>
   );

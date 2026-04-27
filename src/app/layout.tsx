@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { PERSON, SEO, ALL_KEYWORDS, SITE_URL } from "./metadata";
@@ -28,6 +28,11 @@ export const metadata: Metadata = {
   authors: [{ name: PERSON.name, url: SITE_URL }],
   creator: PERSON.name,
   publisher: PERSON.name,
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
 
   // ─── Canonical & Robots ─────────────────────────────────────────────────
   alternates: {
@@ -108,6 +113,13 @@ export const metadata: Metadata = {
     apple: [{ url: "/assets/img/favicon.png", sizes: "180x180" }],
     shortcut: "/favicon.ico",
   },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  themeColor: "#f6f8fb",
+  colorScheme: "light",
 };
 
 // ─── JSON-LD Structured Data ─────────────────────────────────────────────────
@@ -211,14 +223,25 @@ const websiteSchema = {
   description: SEO.description,
   author: { "@id": `${SITE_URL}/#person` },
   inLanguage: "en-IN",
-  potentialAction: {
-    "@type": "SearchAction",
-    target: {
-      "@type": "EntryPoint",
-      urlTemplate: `${SITE_URL}/?q={search_term_string}`,
-    },
-    "query-input": "required name=search_term_string",
-  },
+};
+
+const projectItemListSchema = {
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  "@id": `${SITE_URL}/projects#projects`,
+  name: "Selected Cloud and DevOps Projects",
+  itemListElement: [
+    "SmartATP Enterprise Automation Platform",
+    "Cloud-Native DevSecOps CI/CD Platform",
+    "Quantum RUDDER",
+    "Clusterized Microservices Architecture",
+    "Server Security Hardening with Ansible",
+  ].map((name, index) => ({
+    "@type": "ListItem",
+    position: index + 1,
+    name,
+    url: `${SITE_URL}/projects`,
+  })),
 };
 
 const profilePageSchema = {
@@ -245,25 +268,25 @@ const profilePageSchema = {
         "@type": "ListItem",
         position: 2,
         name: "About",
-        item: `${SITE_URL}/#about`,
+        item: `${SITE_URL}/about`,
       },
       {
         "@type": "ListItem",
         position: 3,
         name: "Experience",
-        item: `${SITE_URL}/#experience`,
+        item: `${SITE_URL}/experience`,
       },
       {
         "@type": "ListItem",
         position: 4,
         name: "Projects",
-        item: `${SITE_URL}/#projects`,
+        item: `${SITE_URL}/projects`,
       },
       {
         "@type": "ListItem",
         position: 5,
         name: "Contact",
-        item: `${SITE_URL}/#contact`,
+        item: `${SITE_URL}/contact`,
       },
     ],
   },
@@ -303,6 +326,10 @@ export default function RootLayout({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(profilePageSchema) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(projectItemListSchema) }}
         />
       </head>
       <body className={`${inter.variable} antialiased`}>{children}</body>

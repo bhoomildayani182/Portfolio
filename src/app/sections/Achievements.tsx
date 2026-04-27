@@ -1,171 +1,132 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
+import { motion } from 'framer-motion';
+
+const achievementsData = [
+  {
+    title: 'Student Start-up and Innovation Policy (SSIP)',
+    category: 'Hackathon',
+    image: '/assets/img/ssiphacathon.jpg',
+    description: 'Had an amazing experience during my first ever 36 hours hackathon participation in SSIP hosted #aazadikaamritmahotsav hackathon organised by Education department of Gujarat Government.',
+    projectDesc: 'A web portal for maintaining purchase data (Portalsology) using MERN stack.',
+    tags: ['MERN Stack', 'Web Development', 'Hackathon'],
+    link: 'https://github.com/bhoomildayani182/Portalsology_Hackathon_2k22.git',
+  },
+  {
+    title: 'Codepie 3.0 Participant',
+    category: 'Programming',
+    image: '/assets/img/codepi3.png',
+    description: 'I earned a certificate for my participation in Codepie 3.0 Competitive Programming Contest Organized by Faculty of Technology & Engineering in association with Codeing Ninjas and Aris Overseas on March 28, 2023.',
+    quote: 'Demonstrated strong problem-solving skills and ability to work under pressure, showcasing proficiency in coding and programming.',
+    tags: ['Competitive Programming', 'Problem Solving', 'Coding'],
+  },
+];
 
 export default function Achievements() {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
-      // Check if element is in viewport
-      const element = document.getElementById('Achievements');
-      if (element) {
-        const rect = element.getBoundingClientRect();
-        const isInViewport = rect.top <= window.innerHeight * 0.75;
-        setIsVisible(isInViewport);
-      }
+      const element = document.getElementById('achievements');
+      if (!element) return;
+      const rect = element.getBoundingClientRect();
+      setIsVisible(rect.top <= window.innerHeight * 0.78);
     };
 
-    window.addEventListener('scroll', handleScroll);
-    // Initial check
+    window.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll();
-
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   const containerVariants = {
     hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        duration: 0.8,
-        staggerChildren: 0.15
-      }
-    }
+    visible: { opacity: 1, transition: { duration: 0.65, staggerChildren: 0.1 } },
   };
 
   const itemVariants = {
     hidden: { y: 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: { duration: 0.5 }
-    }
+    visible: { y: 0, opacity: 1, transition: { duration: 0.5 } },
   };
 
-  const achievementsData = [
-    {
-      title: "Student Start-up and Innovation Policy (SSIP)",
-      category: "Hackathon",
-      image: "/assets/img/ssiphacathon.jpg",
-      description: "Had an amazing experience during my first ever 36 hours hackathon participation in SSIP hosted #aazadikaamritmahotsav hackathon organised by Education department of Gujarat Government.",
-      projectDesc: "A web portal for maintaining purchase data (Portalsology) using MERN stack.",
-      tags: ["MERN Stack", "Web Development", "Hackathon"],
-      link: "https://github.com/bhoomildayani182/Portalsology_Hackathon_2k22.git"
-    },
-    {
-      title: "Codepie 3.0 Participant",
-      category: "Programming",
-      image: "/assets/img/codepi3.png",
-      description: "I earned a certificate for my participation in Codepie 3.0 Competitive Programming Contest Organized by Faculty of Technology & Engineering in association with Codeing Ninjas and Aris Overseas on March 28, 2023.",
-      quote: "Demonstrated strong problem-solving skills and ability to work under pressure, showcasing proficiency in coding and programming.",
-      tags: ["Competitive Programming", "Problem Solving", "Coding"]
-    }
-  ];
-
   return (
-    <section className="relative min-h-screen pt-24 py-16 px-6 md:px-12 bg-gradient-to-br from-background to-gray-light/30" id="Achievements">
-      {/* Background decorative elements */}
-      <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0 pointer-events-none">
-        <div className="absolute top-60 right-10 md:right-40 w-64 h-64 bg-primary/10 rounded-full filter blur-3xl"></div>
-        <div className="absolute bottom-60 right-10 md:right-40 w-72 h-72 bg-secondary/10 rounded-full filter blur-3xl"></div>
-        <div className="absolute top-1/3 right-1/3 w-96 h-96 bg-accent/5 rounded-full filter blur-3xl"></div>
+    <section className="relative overflow-hidden border-y border-line bg-panel-bg/55 px-5 py-24 md:px-8 lg:px-10" id="achievements">
+      <div className="cloud-grid pointer-events-none absolute inset-0 opacity-30" aria-hidden="true" />
 
-        {/* Decorative shapes */}
-        <div className="absolute top-1/3 right-20 w-12 h-12 bg-accent/10 rotate-45"></div>
-        <div className="absolute bottom-1/4 right-40 w-8 h-8 bg-primary/10 rounded-full"></div>
-      </div>
-
-      {/* Content */}
       <motion.div
-        className="relative z-10 max-w-7xl mx-auto"
+        className="relative z-10 mx-auto max-w-7xl"
         variants={containerVariants}
         initial="hidden"
-        animate={isVisible ? "visible" : "hidden"}
+        animate={isVisible ? 'visible' : 'hidden'}
       >
-        {/* Header */}
-        <motion.div variants={itemVariants} className="mb-16 text-center">
-          <h2 className="inline-block py-1 px-3 mb-3 text-sm font-medium rounded-full bg-primary/10 text-primary">Recognition & Accomplishments</h2>
-          <h1 className="text-5xl md:text-6xl font-bold mb-6">
-            My <span className="gradient-text">Achievements</span>
+        <motion.div variants={itemVariants} className="mb-12 max-w-3xl">
+          <span className="section-kicker">Recognition & Accomplishments</span>
+          <h1 className="section-heading">
+            Achievements beyond <span className="gradient-text">day-to-day delivery</span>
           </h1>
-          <p className="text-lg text-gray-dark max-w-3xl mx-auto">
+          <p className="section-copy mt-5">
             Notable accomplishments and recognition received throughout my academic and professional journey.
           </p>
         </motion.div>
 
-        {/* Achievements Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {achievementsData.map((achievement, index) => (
-            <motion.div
-              key={index}
-              variants={itemVariants}
-              className="card bg-card-bg rounded-xl shadow-lg overflow-hidden transform transition duration-500 hover:-translate-y-2 hover:shadow-xl h-full flex flex-col"
-            >
-              <div className="relative">
-                <div className="h-52 w-full bg-gray-50 flex items-center justify-center overflow-hidden">
+        <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+          {achievementsData.map((achievement) => (
+            <motion.article key={achievement.title} variants={itemVariants} className="card grid overflow-hidden lg:grid-cols-[0.9fr_1.1fr]">
+              <div className="border-b border-line bg-[#f8fafc] p-5 lg:border-b-0 lg:border-r">
+                <div className="relative h-64 overflow-hidden rounded-lg bg-white">
                   <Image
                     src={achievement.image}
                     alt={achievement.title}
-                    width={400}
-                    height={240}
-                    className="object-contain p-4 w-full h-full transition-transform duration-500 hover:scale-105"
+                    fill
+                    className="object-contain p-4"
+                    sizes="(max-width: 768px) 90vw, 420px"
                   />
                 </div>
               </div>
 
-              <div className="p-5 flex flex-col flex-grow">
-                <h3 className="text-xl font-bold mb-3 text-foreground text-center">{achievement.title}</h3>
-
-                <p className="text-gray-dark mb-3 text-sm">{achievement.description}</p>
+              <div className="flex flex-col p-5 md:p-6">
+                <span className="mb-3 w-fit rounded-md border border-accent/30 bg-accent/10 px-2.5 py-1 text-xs font-black text-amber-700">
+                  {achievement.category}
+                </span>
+                <h3 className="text-2xl font-black leading-tight text-foreground">{achievement.title}</h3>
+                <p className="mt-4 text-sm leading-6 text-gray-medium">{achievement.description}</p>
 
                 {achievement.projectDesc && (
-                  <div className="mb-3">
-                    <p className="text-gray-dark text-sm">{achievement.projectDesc}</p>
-                  </div>
+                  <p className="mt-4 rounded-lg border border-line bg-panel-bg p-4 text-sm leading-6 text-gray-dark">
+                    {achievement.projectDesc}
+                  </p>
                 )}
 
                 {achievement.quote && (
-                  <div className="mb-3 italic text-gray-dark text-sm border-l-2 border-primary/30 pl-3">
+                  <blockquote className="mt-4 border-l-2 border-primary/50 pl-4 text-sm italic leading-6 text-gray-dark">
                     "{achievement.quote}"
-                  </div>
+                  </blockquote>
                 )}
 
-                <div className="flex flex-wrap justify-center gap-2 mb-4">
-                  {achievement.tags.slice(0, 3).map((tag, i) => (
-                    <span key={i} className="bg-primary/5 px-2 py-1 rounded-full text-xs text-primary font-medium">
+                <div className="mt-5 flex flex-wrap gap-2">
+                  {achievement.tags.map((tag) => (
+                    <span key={tag} className="chip">
                       {tag}
                     </span>
                   ))}
-                  {achievement.tags.length > 3 && (
-                    <span className="bg-primary/5 px-2 py-1 rounded-full text-xs text-primary font-medium">
-                      +{achievement.tags.length - 3}
-                    </span>
-                  )}
                 </div>
 
                 {achievement.link && (
-                  <div className="flex justify-center items-center mt-auto">
-                    <a
-                      href={achievement.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="px-5 py-2.5 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors duration-300 flex items-center gap-2 text-sm w-full justify-center"
-                    >
-                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5" />
-                      </svg>
-                      View Project
-                    </a>
-                  </div>
+                  <a
+                    href={achievement.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-6 inline-flex w-fit items-center gap-2 rounded-md border border-primary/35 bg-primary/10 px-4 py-2 text-sm font-bold text-primary-dark transition-colors hover:border-primary/55 hover:bg-primary/15"
+                  >
+                    View Project
+                  </a>
                 )}
               </div>
-            </motion.div>
+            </motion.article>
           ))}
         </div>
       </motion.div>
     </section>
   );
-} 
+}

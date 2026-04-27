@@ -15,10 +15,10 @@ export const PERSON = {
         countryCode: "IN",
     },
     url: SITE_URL,
-    image: `${SITE_URL}/assets/img/profile.jpg`,
+    image: `${SITE_URL}/assets/img/Profile-1.jpg`,
     linkedin: "https://linkedin.com/in/bhoomildayani",
     github: "https://github.com/bhoomildayani182",
-    twitter: "https://twitter.com/BhoomilDayani",
+    twitter: "https://x.com/Bhoomil_Dayani",
     hackerrank: "https://www.hackerrank.com/bhoomildayani182",
 } as const;
 
@@ -104,11 +104,11 @@ export const ALL_KEYWORDS = [
 export const SEO = {
     titleTemplate: "%s | Bhoomil Dayani",
     defaultTitle:
-        "Bhoomil Dayani | DevOps & Cloud Engineer — Kubernetes, AWS, CI/CD & DevSecOps",
+        "Bhoomil Dayani | Cloud DevOps Engineer - AWS, Kubernetes, CI/CD & DevSecOps",
     description:
-        "Bhoomil Dayani is a DevOps & Cloud Engineer based in Ahmedabad, India, specializing in Kubernetes, AWS, Terraform, CI/CD pipelines, GitHub Actions, and DevSecOps. AWS Certified Cloud Practitioner & Azure Fundamentals (AZ-900) certified. View portfolio, projects, and experience.",
-    ogImage: `${SITE_URL}/og-image.png`,
+        "Portfolio of Bhoomil Dayani, a Cloud DevOps Engineer in Ahmedabad, India specializing in AWS, Kubernetes, Terraform, CI/CD automation, GitHub Actions, infrastructure as code, and DevSecOps.",
+    ogImage: `${SITE_URL}/opengraph-image`,
     ogImageAlt:
-        "Bhoomil Dayani — DevOps & Cloud Engineer | Kubernetes, AWS, CI/CD, DevSecOps",
-    twitterHandle: "@BhoomilDayani",
+        "Bhoomil Dayani - Cloud DevOps Engineer portfolio covering AWS, Kubernetes, CI/CD, and DevSecOps",
+    twitterHandle: "@Bhoomil_Dayani",
 } as const;

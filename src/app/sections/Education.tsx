@@ -1,196 +1,107 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
+
+const educationData = [
+  {
+    school: 'CHAROTAR UNIVERSITY OF SCIENCE AND TECHNOLOGY',
+    degree: 'Bachelor of Engineering - Information Technology',
+    period: '2020-2024',
+    grade: { label: 'CGPA', value: '9.23' },
+    tags: ['Information Technology', 'Programming', 'Research'],
+  },
+  {
+    school: 'TAPOVAN VIDHYALAYA',
+    degree: 'High School - Science Stream',
+    period: '2018-2020',
+    grade: { label: 'Percentage', value: '74.67%' },
+    tags: ['Science', 'Mathematics', 'Physics'],
+  },
+  {
+    school: 'BHULKA SAGAR VIDHYABHAVAN',
+    degree: 'Secondary School Certificate (G.S.E.B)',
+    period: '2017-2018',
+    grade: { label: 'Percentage', value: '85.21%' },
+    tags: ['Mathematics', 'Science', 'English'],
+  },
+];
 
 export default function Education() {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
-      // Check if element is in viewport
       const element = document.getElementById('education');
-      if (element) {
-        const rect = element.getBoundingClientRect();
-        const isInViewport = rect.top <= window.innerHeight * 0.75;
-        setIsVisible(isInViewport);
-      }
+      if (!element) return;
+      const rect = element.getBoundingClientRect();
+      setIsVisible(rect.top <= window.innerHeight * 0.78);
     };
 
-    window.addEventListener('scroll', handleScroll);
-    // Initial check
+    window.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll();
-
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   const containerVariants = {
     hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        duration: 0.8,
-        staggerChildren: 0.3
-      }
-    }
+    visible: { opacity: 1, transition: { duration: 0.65, staggerChildren: 0.1 } },
   };
 
   const itemVariants = {
     hidden: { y: 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: { duration: 0.5 }
-    }
+    visible: { y: 0, opacity: 1, transition: { duration: 0.5 } },
   };
 
-  const educationData = [
-    {
-      id: 0,
-      school: "CHAROTAR UNIVERSITY OF SCIENCE AND TECHNOLOGY",
-      degree: "Bachelor of Engineering - Information Technology",
-      period: "2020-2024",
-      grade: { label: "CGPA", value: "9.23" },
-      tags: ["Information Technology", "Programming", "Research"],
-      icon: "🎓", // You can replace this with actual image paths later
-      color: "from-primary-light/20 to-primary/5"
-    },
-    {
-      id: 1,
-      school: "TAPOVAN VIDHYALAYA",
-      degree: "High School - Science Stream",
-      period: "2018-2020",
-      grade: { label: "Percentage", value: "74.67%" },
-      tags: ["Science", "Mathematics", "Physics"],
-      icon: "🔬",
-      color: "from-secondary-light/20 to-secondary/5"
-    },
-    {
-      id: 2,
-      school: "BHULKA SAGAR VIDHYABHAVAN",
-      degree: "Secondary School Certificate (G.S.E.B)",
-      period: "2017-2018",
-      grade: { label: "Percentage", value: "85.21%" },
-      tags: ["Mathematics", "Science", "English"],
-      icon: "📚",
-      color: "from-accent/20 to-accent/5"
-    }
-  ];
-
   return (
-    <section className="relative min-h-screen pt-24 py-16 px-6 md:px-12 bg-gradient-to-br from-background to-gray-light/30" id="education">
-      {/* Background decorative elements */}
-      <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0 pointer-events-none">
-        <div className="absolute top-60 right-10 md:right-40 w-64 h-64 bg-primary/10 rounded-full filter blur-3xl"></div>
-        <div className="absolute bottom-60 left-10 md:left-40 w-72 h-72 bg-secondary/10 rounded-full filter blur-3xl"></div>
-        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-96 h-96 bg-accent/5 rounded-full filter blur-3xl"></div>
-
-        {/* Decorative shapes */}
-        <div className="absolute top-1/3 left-20 w-12 h-12 bg-accent/10 rotate-45"></div>
-      </div>
-
-      {/* Content */}
+    <section className="relative overflow-hidden px-5 py-24 md:px-8 lg:px-10" id="education">
       <motion.div
-        className="relative z-10 max-w-6xl mx-auto"
+        className="mx-auto max-w-7xl"
         variants={containerVariants}
         initial="hidden"
-        animate={isVisible ? "visible" : "hidden"}
+        animate={isVisible ? 'visible' : 'hidden'}
       >
-        {/* Header */}
-        <motion.div variants={itemVariants} className="mb-16 text-center">
-          <h2 className="inline-block py-1 px-3 mb-3 text-sm font-medium rounded-full bg-primary/10 text-primary">Academic Background</h2>
-          <h1 className="text-5xl md:text-6xl font-bold mb-6">
-            My <span className="gradient-text">Education</span>
+        <motion.div variants={itemVariants} className="mb-12 max-w-3xl">
+          <span className="section-kicker">Academic Background</span>
+          <h1 className="section-heading">
+            Education that shaped my <span className="gradient-text">engineering base</span>
           </h1>
-          <p className="text-lg text-gray-dark max-w-3xl mx-auto">
-            My academic journey that has shaped my knowledge and expertise.
+          <p className="section-copy mt-5">
+            My academic journey that has shaped my knowledge, research orientation, and technical fundamentals.
           </p>
         </motion.div>
 
-        {/* Education Cards - Desktop View */}
-        <div className="hidden md:grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
           {educationData.map((item, index) => (
-            <motion.div
-              key={index}
-              variants={itemVariants}
-              className={`card relative rounded-2xl bg-card-bg shadow-lg overflow-hidden transition-all duration-300 transform hover:shadow-xl`}
-            >
-              {/* Year badge at upper right */}
-              <div className="absolute top-0 right-0 bg-primary text-white px-3 py-1 rounded-bl-lg text-sm font-semibold z-10">
-                {item.period}
+            <motion.article key={item.school} variants={itemVariants} className="card flex h-full flex-col p-5">
+              <div className="mb-5 flex items-center justify-between gap-3">
+                <span className="flex h-10 w-10 items-center justify-center rounded-lg border border-primary/30 bg-primary/10 text-sm font-black text-primary-dark">
+                  {index + 1}
+                </span>
+                <span className="rounded-md border border-line bg-white px-3 py-1 text-xs font-black uppercase tracking-[0.12em] text-gray-medium">
+                  {item.period}
+                </span>
               </div>
 
-              <div className="p-6 pt-4">
-                <div className="flex items-center gap-3 mb-4 mt-4">
-                  <div className="text-3xl">{item.icon}</div>
-                  <h3 className="text-primary text-xl font-bold">
-                    {item.school}
-                  </h3>
-                </div>
+              <h3 className="text-xl font-black leading-tight text-foreground">{item.school}</h3>
+              <p className="mt-3 text-sm font-bold leading-6 text-primary-dark">{item.degree}</p>
 
-                <div className="inline-block bg-primary/10 text-primary px-3 py-1 rounded-lg mb-4 text-sm font-medium">
-                  {item.degree}
-                </div>
-
-                <div className="mb-5 flex items-center">
-                  <div className="flex items-center gap-2 bg-gray-light/50 rounded-lg px-3 py-2">
-                    <span className="font-semibold text-gray-dark">{item.grade.label}:</span>
-                    <span className="text-primary font-bold text-lg">{item.grade.value}</span>
-                  </div>
-                </div>
-
-                <div className="flex flex-wrap gap-2 mt-3">
-                  {item.tags.map((tag, i) => (
-                    <span key={i} className="bg-gray-light text-gray-dark px-3 py-1 rounded-full text-sm">
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-
-        {/* Mobile View */}
-        <div className="md:hidden space-y-6">
-          {educationData.map((item, index) => (
-            <motion.div
-              key={index}
-              variants={itemVariants}
-              className="card bg-card-bg rounded-2xl shadow-lg overflow-hidden relative"
-            >
-              {/* Year badge at upper right */}
-              <div className="absolute top-0 right-0 bg-primary text-white px-3 py-1 rounded-bl-lg text-sm font-semibold z-10">
-                {item.period}
+              <div className="mt-5 w-fit rounded-lg border border-secondary/25 bg-secondary/10 px-3 py-2">
+                <span className="text-xs font-bold uppercase tracking-[0.14em] text-secondary-dark">{item.grade.label}</span>
+                <span className="ml-2 text-lg font-black text-foreground">{item.grade.value}</span>
               </div>
 
-              <div className="p-6 pt-4">
-                <div className="flex items-center gap-2 mb-3 mt-4">
-                  <div className="text-3xl">{item.icon}</div>
-                  <h3 className="text-primary text-xl font-bold">{item.school}</h3>
-                </div>
-
-                <div className="inline-block bg-primary/10 text-primary px-3 py-1 rounded-lg mb-4 text-sm font-medium">
-                  {item.degree}
-                </div>
-
-                <div className="flex items-center gap-2 mb-4 bg-gray-light/50 w-fit rounded-lg px-3 py-2">
-                  <span className="font-semibold text-gray-dark">{item.grade.label}:</span>
-                  <span className="text-primary font-bold text-lg">{item.grade.value}</span>
-                </div>
-
-                <div className="flex flex-wrap gap-2">
-                  {item.tags.map((tag, i) => (
-                    <span key={i} className="bg-gray-light text-gray-dark px-3 py-1 rounded-full text-sm">
-                      {tag}
-                    </span>
-                  ))}
-                </div>
+              <div className="mt-5 flex flex-wrap gap-2">
+                {item.tags.map((tag) => (
+                  <span key={tag} className="chip">
+                    {tag}
+                  </span>
+                ))}
               </div>
-            </motion.div>
+            </motion.article>
           ))}
         </div>
       </motion.div>
     </section>
   );
-} 
+}
